@@ -1,0 +1,34 @@
+## 클라이언트와 서버
+3. 서버의 포트
+- 웹을 동작하기 위해서는 여러대의 서버가 필요한데(Email server,File server, Web server...) ip만으로 어떤 서버인지 구별할 수 없음으로
+  port를 사용한다. ex) 대표전화안에 여러개의 내선번호가 있는 것으로 생각하면 됨
+
+  - 웹서버는 기본포트 80으로 생략가능함
+  - 한 port에는 한 server만 연결될 수 있다 > 연결을 위해 port와 server를 binding해줘야함 > Listening 한다고 함
+
+4. 웹 애플리케이션 서버(WAS) : 웹 애플리케이션을 서비스하는 서버
+    - application == 프로그램
+    - 서버에 프로그램을 설치하고 클라이언트가 사용할 수 있게하는 것
+
+5. Tomcat의 내부 구조
+    5-1. 요청 8080으로 하면 tomcat내부의 미리 만들어진 Thread Pool(미리 만들어 놓은 Thread들) 중 한가한 Thread가 요청을 처리함
+    5-2. Thread가 Service한테 전달
+    5-3. Service가 요청을 처리하는데 그 안의 Connector가 어떤 종류의 Protocol인지에 따라 처리할 Connetor를 정해서 처리함 ex) HTTP1.1, HTTP2, AJP
+    5-4. Connector가 Engine(Catalina)한테 전달
+    5-5. Engine안에는 Host가 있는데 n개의 호스트도 가능함 - 보통 한 개이긴 함
+    5-6. Host안에 Context가 있는데 n개 가능 > Context는 하나의 Web App(프로젝트) ex) project1, project2 . etc. > 하나의 호스트의 여러개의 웹애플리케이션이 설치 가능
+    5-7. Context안에 Servlet이 있음 : 작은 서버 프로그램이라는 뜻 ex) Controller
+
+    ### Tomcat(Server) >> Thread > Serviece >> Connectorp(Protocol) > Engine(Catalina) >> Host >>> Context(project) >>>> servlet(program)
+
+
+ ## Tomcat의 설정 파일 - server.xml, web.xml   
+ 1. 톰캣설치경로/conf/server.xml : Tomcat 서버 설정 파일
+ 2. 톰캣설치경로/conf/web.xml : Tomcat의 모든 web app의 공통 설정
+ 3. 톰캣설치경로/WEB-INF/web.xml : web app의 개별 설정
+ ##### 2.번 공통설정을 먼저하고 3.의 개별 설정을 따로 들어감
+ [참고] STS에서는 프로젝트/src/main/webapp/WEB-INF/web.xml
+        IntelliJ에서는 프로젝트/src/main/webapp/WEB-INF/web.xml
+
+4. 개발툴의 Server폴더 밑 파일들은 Tomcat의 conf폴더에 있는 설정 파일의 복사본이므로, 하나의 Tomcat프로그램을 공유하면서 
+설정만 다른 여러 서버를 등록가능 > 개발툴 내의 Server 설정 변경은 Tomcat이 설치된 경로의 설정에 영향을 주지 않는다. : 복사본이기때문
